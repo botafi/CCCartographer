@@ -1,6 +1,7 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id 'dev.architectury.loom' version '1.13.463' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.gradleup.shadow' version '8.3.6' apply false
 }
 
 architectury {
@@ -15,17 +16,14 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
-        // mappings loom.officialMojangMappings()
-        // The following line declares the yarn mappings you may select this one as well.
-        mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
-        implementation "net.kyori:adventure-api:4.14.0"
-        compileOnly("cc.tweaked:cc-tweaked-${rootProject.minecraft_version}-common-api:${rootProject.cct_version}")
-        compileOnly "com.github.BlueMap-Minecraft:BlueMapAPI:v${rootProject.bluemap_version}"
-        compileOnly "us.dynmap:DynmapCoreAPI:${rootProject.dynmap_version}"
-        compileOnly "maven.modrinth:pl3xmap:${rootProject.pl3xmap_version}"
-        compileOnly "xyz.jpenilla:squaremap-api:${rootProject.squaremap_version}"
+        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+        mappings loom.officialMojangMappings()
+        implementation "net.kyori:adventure-api:4.26.1"
+        compileOnly("cc.tweaked:cc-tweaked-${rootProject.cct_minecraft_version}-common-api:${rootProject.cct_version}")
+        compileOnly "de.bluecolored:bluemap-api:${rootProject.bluemap_version}"
+        // compileOnly "us.dynmap:DynmapCoreAPI:${rootProject.dynmap_version}"
+        // compileOnly "maven.modrinth:pl3xmap:${rootProject.pl3xmap_version}"
+        // compileOnly "xyz.jpenilla:squaremap-api:${rootProject.squaremap_version}"
     }
 }
 
@@ -34,7 +32,9 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
-    archivesBaseName = rootProject.archives_base_name
+    base {
+        archivesName = rootProject.archives_base_name
+    }
     version = "${rootProject.mod_version}"
     group = rootProject.maven_group
 
@@ -46,13 +46,26 @@ allprojects {
         // for more information about repositories.
         mavenCentral()
         maven {
+           name = "Squiddev maven cct"
            url "https://squiddev.cc/maven/"
            content {
              includeGroup("cc.tweaked")
+             includeModule("org.squiddev", "Cobalt")
            }
         }
         maven { url 'https://jitpack.io' }
         maven { url = "https://repo.mikeprimm.com/" }
+        maven { url 'https://repo.bluecolored.de/releases' }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    url = "https://cursemaven.com"
+                }
+            }
+            filter {
+                includeGroup("curse.maven")
+            }
+        }
         exclusiveContent {
             forRepository { maven { url = "https://api.modrinth.com/maven" } }
             filter { includeGroup "maven.modrinth" }
@@ -61,10 +74,13 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = 21
     }
 
     java {
         withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }

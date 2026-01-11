@@ -2,7 +2,7 @@ package net.jonko0493.computercartographer.integration;
 
 import net.jonko0493.computercartographer.ComputerCartographer;
 import net.jonko0493.computercartographer.MinecraftServerGetter;
-import net.minecraft.util.WorldSavePath;
+import net.minecraft.world.level.storage.LevelResource;
 import org.apache.commons.io.FilenameUtils;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.DynmapCommonAPIListener;
@@ -55,7 +55,7 @@ public class DynmapIntegration implements IMapIntegration {
 
     @Override
     public String[] getAvailableMaps() {
-        Path savePath = MinecraftServerGetter.getServerInstance().getSavePath(WorldSavePath.ROOT);
+        Path savePath = MinecraftServerGetter.getServerInstance().getWorldPath(LevelResource.ROOT);
         savePath = savePath.getParent();
 
         return IntegrationHelper.getDirectoriesWithRegionDirectory(savePath.toFile()).toArray(String[]::new);

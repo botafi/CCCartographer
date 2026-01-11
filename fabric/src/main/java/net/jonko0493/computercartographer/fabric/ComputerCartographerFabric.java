@@ -19,7 +19,7 @@ public class ComputerCartographerFabric implements ModInitializer {
     }
 
     public static void registerPeripherals() {
-        PeripheralLookup.get().registerFallback(((world, pos, state, blockEntity, context) -> {
+        PeripheralLookup.get().registerFallback(((level, pos, state, blockEntity, context) -> {
             if (blockEntity instanceof ComputerizedCartographerBlockEntity) {
                 return ((ComputerizedCartographerBlockEntity)blockEntity).getPeripheral();
             }

@@ -1,0 +1,42 @@
+modLoader = "javafml"
+loaderVersion = "[10,)"
+license = "MIT License"
+issueTrackerURL = "https://github.com/jonko0493/ComputerCartographer/issues"
+
+[[mods]]
+modId = "computer_cartographer"
+version = "${version}"
+displayName = "Computer Cartographer"
+authors = "Jonko0493"
+description = '''
+A mod that adds a peripheral to Computer Craft: Tweaked that allows interfacing with various mapping mods (Dynmap, Bluemap, Pl3xmap, and Squaremap)
+'''
+logoFile = "assets/icon.png"
+
+[[dependencies.computer_cartographer]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.10,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.computer_cartographer]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.10,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.computer_cartographer]]
+modId = "architectury"
+type = "required"
+versionRange = "[19.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.computer_cartographer]]
+modId = "computercraft"
+type = "required"
+versionRange = "[1.111.0,)"
+ordering = "AFTER"
+side = "BOTH"

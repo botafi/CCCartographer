@@ -6,16 +6,17 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.jonko0493.computercartographer.block.ComputerizedCartographerBlock;
 import net.jonko0493.computercartographer.block.ComputerizedCartographerBlockEntity;
+import net.jonko0493.computercartographer.platform.BlockEntityTypeHelper;
 import net.jonko0493.computercartographer.integration.*;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,15 @@ public class ComputerCartographer
 		Log.error(String.join("\n", Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toArray(String[]::new)));
 	}
 
-	public static DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
-	public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK);
-	public static Map<RegistrySupplier<? extends Block>, Item.Settings> BLOCK_ITEMS = new HashMap<>();
-	public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
-	public static final DeferredRegister<ItemGroup> TABS = DeferredRegister.create("computercraft", RegistryKeys.ITEM_GROUP);
+	public static DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, Registries.ITEM);
+	public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, Registries.BLOCK);
+	public static Map<RegistrySupplier<? extends Block>, Item.Properties> BLOCK_ITEMS = new HashMap<>();
+	public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(MOD_ID, Registries.BLOCK_ENTITY_TYPE);
+	public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create("computercraft", Registries.CREATIVE_MODE_TAB);
 
-	public static RegistrySupplier<ComputerizedCartographerBlock> COMPUTERIZED_CARTOGRAPHER_BLOCK = registerBlockItem("computerized_cartographer", () -> new ComputerizedCartographerBlock(AbstractBlock.Settings.create().hardness(1.3f)));
-	public static RegistrySupplier<BlockEntityType<ComputerizedCartographerBlockEntity>> COMPUTERIZED_CARTOGRAPHER_BLOCK_ENTITY = BLOCK_ENTITIES.register("computerized_cartographer_block_entity", () -> BlockEntityType.Builder.create(ComputerizedCartographerBlockEntity::new, COMPUTERIZED_CARTOGRAPHER_BLOCK.get()).build(null));
+	public static RegistrySupplier<ComputerizedCartographerBlock> COMPUTERIZED_CARTOGRAPHER_BLOCK = registerBlockItem("computerized_cartographer", () -> new ComputerizedCartographerBlock(BlockBehaviour.Properties.of().destroyTime(1.3f)));
+	// Use platform-specific helper since BlockEntityType.Builder is private in vanilla 1.21.3+ (Fabric uses FabricBlockEntityTypeBuilder, NeoForge still has Builder)
+	public static RegistrySupplier<BlockEntityType<ComputerizedCartographerBlockEntity>> COMPUTERIZED_CARTOGRAPHER_BLOCK_ENTITY = BLOCK_ENTITIES.register("computerized_cartographer_block_entity", () -> BlockEntityTypeHelper.create(ComputerizedCartographerBlockEntity::new, COMPUTERIZED_CARTOGRAPHER_BLOCK.get()));
 
 	public static <T extends Block> RegistrySupplier<T> registerBlock(String name, Supplier<T> block) {
 		return BLOCKS.register(name, block);
@@ -56,10 +58,10 @@ public class ComputerCartographer
 	}
 
 	public static <T extends Block> RegistrySupplier<T> registerBlockItem(String name, Supplier<T> block) {
-		return registerBlockItem(name, block, new Item.Settings());
+		return registerBlockItem(name, block, new Item.Properties());
 	}
 
-	public static <T extends Block> RegistrySupplier<T> registerBlockItem(String name, Supplier<T> block, Item.Settings props) {
+	public static <T extends Block> RegistrySupplier<T> registerBlockItem(String name, Supplier<T> block, Item.Properties props) {
 		RegistrySupplier<T> blockRegistered = registerBlock(name, block);
 		BLOCK_ITEMS.put(blockRegistered, props);
 		return blockRegistered;
@@ -70,7 +72,7 @@ public class ComputerCartographer
 		BLOCKS.register();
 		BLOCK_ITEMS.forEach((block, itemprops) -> {
 			RegistrySupplier<BlockItem> blockItem = ITEMS.register(block.getId(), () -> new BlockItem(block.get(), itemprops));
-			CreativeTabRegistry.append(RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier("computercraft:tab")), blockItem);
+			CreativeTabRegistry.append(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath("computercraft", "tab")), blockItem);
 		});
 		ITEMS.register();
 		BLOCK_ENTITIES.register();
@@ -86,26 +88,27 @@ public class ComputerCartographer
 				integrations.add(blueMapIntegration);
 			}
 		}
-		if (Platform.isModLoaded("dynmap")) {
-			DynmapIntegration dynmapIntegration = new DynmapIntegration();
-			if (dynmapIntegration.init()) {
-				log("Registered Dynmap integration!");
-				integrations.add(dynmapIntegration);
-			}
-		}
-		if (Platform.isModLoaded("pl3xmap")) {
-			Pl3xMapIntegration pl3xMapIntegration = new Pl3xMapIntegration();
-			if (pl3xMapIntegration.init()) {
-				log("Registered Pl3xMap integration!");
-				integrations.add(pl3xMapIntegration);
-			}
-		}
-		if (Platform.isModLoaded("squaremap")) {
-			SquaremapIntegration squaremapIntegration = new SquaremapIntegration();
-			if (squaremapIntegration.init()) {
-				log("Registered Squaremap integration!");
-				integrations.add(squaremapIntegration);
-			}
-		}
+		// TODO: Re-enable when dependencies are available for 1.21.11
+		// if (Platform.isModLoaded("dynmap")) {
+		// 	DynmapIntegration dynmapIntegration = new DynmapIntegration();
+		// 	if (dynmapIntegration.init()) {
+		// 		log("Registered Dynmap integration!");
+		// 		integrations.add(dynmapIntegration);
+		// 	}
+		// }
+		// if (Platform.isModLoaded("pl3xmap")) {
+		// 	Pl3xMapIntegration pl3xMapIntegration = new Pl3xMapIntegration();
+		// 	if (pl3xMapIntegration.init()) {
+		// 		log("Registered Pl3xMap integration!");
+		// 		integrations.add(pl3xMapIntegration);
+		// 	}
+		// }
+		// if (Platform.isModLoaded("squaremap")) {
+		// 	SquaremapIntegration squaremapIntegration = new SquaremapIntegration();
+		// 	if (squaremapIntegration.init()) {
+		// 		log("Registered Squaremap integration!");
+		// 		integrations.add(squaremapIntegration);
+		// 	}
+		// }
 	}
 }

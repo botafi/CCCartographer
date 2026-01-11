@@ -1,3 +1,14 @@
+// Exclude integrations that don't have 1.21.11 dependencies available yet
+sourceSets {
+    main {
+        java {
+            exclude '**/integration/DynmapIntegration.java'
+            exclude '**/integration/Pl3xMapIntegration.java'
+            exclude '**/integration/SquaremapIntegration.java'
+        }
+    }
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -7,7 +18,7 @@ dependencies {
 }
 
 architectury {
-    common("fabric", "forge")
+    common rootProject.enabled_platforms.split(",")
 }
 
 publishing {

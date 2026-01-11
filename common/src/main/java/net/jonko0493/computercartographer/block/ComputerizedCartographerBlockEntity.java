@@ -2,10 +2,10 @@ package net.jonko0493.computercartographer.block;
 
 import net.jonko0493.computercartographer.ComputerCartographer;
 import net.jonko0493.computercartographer.peripheral.ComputerizedCartographerPeripheral;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ComputerizedCartographerBlockEntity extends BlockEntity {
     private final ComputerizedCartographerPeripheral peripheral = new ComputerizedCartographerPeripheral(this);

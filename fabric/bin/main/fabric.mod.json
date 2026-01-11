@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "computer_cartographer",
+  "version": "${version}",
+
+  "name": "Computer Cartographer",
+  "description": "A mod that adds a peripheral to Computer Craft: Tweaked that allows interfacing with various mapping mods (Dynmap, Bluemap, Pl3xmap, and Squaremap)",
+  "authors": [
+    {
+      "name": "Jonko0493",
+      "contact": {
+        "sources": "https://github.com/jonko0493"
+      }
+    }
+  ],
+  "contact": {
+    "repo": "https://github.com/jonko0493/ComputerCartographer",
+    "issues": "https://github.com/jonko0493/ComputerCartographer/issues"
+  },
+  "license": "MIT License",
+  "icon": "assets/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.jonko0493.computercartographer.fabric.ComputerCartographerFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.24",
+    "minecraft": ">=1.20 <=1.20.1",
+    "computercraft": ">=1.108.4"
+  },
+  "suggests": {
+    "bluemap": ">=3.17",
+    "dynmap": ">=3.6",
+    "pl3xmap": "*",
+    "squaremap": ">=1.2.0"
+  }
+}
