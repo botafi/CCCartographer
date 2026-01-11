@@ -16,7 +16,8 @@ subprojects {
     }
 
     dependencies {
-        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // Use Mojang mappings - the standard going forward as MC moves to unobfuscated releases
         mappings loom.officialMojangMappings()
         implementation "net.kyori:adventure-api:4.26.1"
         compileOnly("cc.tweaked:cc-tweaked-${rootProject.cct_minecraft_version}-common-api:${rootProject.cct_version}")
@@ -79,8 +80,5 @@ allprojects {
 
     java {
         withSourcesJar()
-
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
     }
 }

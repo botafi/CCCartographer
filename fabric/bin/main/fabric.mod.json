@@ -28,13 +28,13 @@
   },
   "depends": {
     "fabricloader": ">=0.14.24",
-    "minecraft": ">=1.20 <=1.20.1",
-    "computercraft": ">=1.108.4"
+    "minecraft": ">=1.21.11",
+    "computercraft": ">=1.110.0"
   },
   "suggests": {
-    "bluemap": ">=3.17",
-    "dynmap": ">=3.6",
+    "bluemap": "*",
+    "dynmap": "*",
     "pl3xmap": "*",
-    "squaremap": ">=1.2.0"
+    "squaremap": "*"
   }
 }

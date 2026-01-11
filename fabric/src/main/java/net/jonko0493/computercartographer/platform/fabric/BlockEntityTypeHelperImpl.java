@@ -1,4 +1,4 @@
-package net.jonko0493.computercartographer.platform;
+package net.jonko0493.computercartographer.platform.fabric;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.world.level.block.Block;

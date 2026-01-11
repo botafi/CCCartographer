@@ -1,0 +1,6 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "computer_cartographer:block/computerized_cartographer"
+    }
+}

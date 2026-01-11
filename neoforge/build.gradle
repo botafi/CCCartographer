@@ -38,6 +38,8 @@ dependencies {
 
     // CC:Tweaked for NeoForge (using forge-api artifact name as that's what's available on maven)
     modApi("cc.tweaked:cc-tweaked-${rootProject.cct_minecraft_version}-forge-api:${rootProject.cct_version}")
+    // Include CC: Tweaked mod for runtime testing (uncomment when available on Maven)
+    // modRuntimeOnly("cc.tweaked:cc-tweaked-${rootProject.cct_minecraft_version}-forge:${rootProject.cct_version}")
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')

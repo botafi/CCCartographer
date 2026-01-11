@@ -1,4 +1,4 @@
-package net.jonko0493.computercartographer.platform;
+package net.jonko0493.computercartographer.platform.neoforge;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

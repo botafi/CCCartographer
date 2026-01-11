@@ -1,6 +1,5 @@
-package net.jonko0493.computercartographer;
+package net.jonko0493.computercartographer.fabric;
 
-import net.jonko0493.computercartographer.fabric.ComputerCartographerFabric;
 import net.minecraft.server.MinecraftServer;
 
 /**

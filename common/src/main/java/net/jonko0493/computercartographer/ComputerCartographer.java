@@ -45,7 +45,19 @@ public class ComputerCartographer
 	public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(MOD_ID, Registries.BLOCK_ENTITY_TYPE);
 	public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create("computercraft", Registries.CREATIVE_MODE_TAB);
 
-	public static RegistrySupplier<ComputerizedCartographerBlock> COMPUTERIZED_CARTOGRAPHER_BLOCK = registerBlockItem("computerized_cartographer", () -> new ComputerizedCartographerBlock(BlockBehaviour.Properties.of().destroyTime(1.3f)));
+	// Helper to create block properties with the required block ID (needed in MC 1.21.x+)
+	private static BlockBehaviour.Properties blockProps(String name) {
+		Identifier id = Identifier.fromNamespaceAndPath(MOD_ID, name);
+		return BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, id));
+	}
+
+	// Helper to create item properties with the required item ID (needed in MC 1.21.x+)
+	private static Item.Properties itemProps(String name) {
+		Identifier id = Identifier.fromNamespaceAndPath(MOD_ID, name);
+		return new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id));
+	}
+
+	public static RegistrySupplier<ComputerizedCartographerBlock> COMPUTERIZED_CARTOGRAPHER_BLOCK = registerBlockItem("computerized_cartographer", () -> new ComputerizedCartographerBlock(blockProps("computerized_cartographer").destroyTime(1.3f)));
 	// Use platform-specific helper since BlockEntityType.Builder is private in vanilla 1.21.3+ (Fabric uses FabricBlockEntityTypeBuilder, NeoForge still has Builder)
 	public static RegistrySupplier<BlockEntityType<ComputerizedCartographerBlockEntity>> COMPUTERIZED_CARTOGRAPHER_BLOCK_ENTITY = BLOCK_ENTITIES.register("computerized_cartographer_block_entity", () -> BlockEntityTypeHelper.create(ComputerizedCartographerBlockEntity::new, COMPUTERIZED_CARTOGRAPHER_BLOCK.get()));
 
@@ -71,7 +83,10 @@ public class ComputerCartographer
 		initIntegrations();
 		BLOCKS.register();
 		BLOCK_ITEMS.forEach((block, itemprops) -> {
-			RegistrySupplier<BlockItem> blockItem = ITEMS.register(block.getId(), () -> new BlockItem(block.get(), itemprops));
+			Identifier blockId = block.getId();
+			// Create item properties with proper ID set (required in MC 1.21.x+)
+			Item.Properties propsWithId = itemProps(blockId.getPath());
+			RegistrySupplier<BlockItem> blockItem = ITEMS.register(blockId, () -> new BlockItem(block.get(), propsWithId));
 			CreativeTabRegistry.append(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath("computercraft", "tab")), blockItem);
 		});
 		ITEMS.register();

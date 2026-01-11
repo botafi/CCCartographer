@@ -1,4 +1,4 @@
-package net.jonko0493.computercartographer;
+package net.jonko0493.computercartographer.neoforge;
 
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
